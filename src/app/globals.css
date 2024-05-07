@@ -2,18 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+html, body {
+  height: 100%;
 }
 
 body {
@@ -30,4 +20,41 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+
+.marker:hover {
+  cursor: pointer;
+}
+
+.marker.active {
+  background: #92400e;
+}
+
+.marker:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #ea580b transparent transparent transparent;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.marker:hover:after, .marker.active:after {
+  border-color:  #92400e transparent transparent transparent;
+}
+
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.mapboxgl-popup-tip {
+  display: none;
 }
