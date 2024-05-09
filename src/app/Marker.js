@@ -59,7 +59,7 @@ const Marker = ({ feature, map, children }) => {
 
     return (
         <div>
-            <div ref={markerEl} className={classNames('marker h-3 px-2 py-1 bg-orange-600 text-white rounded-md box-content shadow hover:bg-orange-800 mapboxgl-marker mapboxgl-marker-anchor-center', {
+            <div ref={markerEl} className={classNames('marker px-2 py-1 bg-orange-600 text-white rounded-md box-content shadow hover:bg-orange-800 mapboxgl-marker mapboxgl-marker-anchor-center', {
                 'active': active
             })}>
                 <div style={{

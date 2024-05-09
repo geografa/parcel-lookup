@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import MapboxTooltip from './MapboxTooltip'
 
 export const pluralize = (number, word) => {
     return `${number} ${word}${number === 1 ? '' : 's'} `
@@ -29,6 +30,7 @@ const Card = ({ feature, onClick }) => {
                     <h5 className="mb-1.5 text-xl font-bold tracking-tight text-gray-900 dark:text-white">${numeral(sale_price).format('0,0')}</h5>
                     <p className="mb-0 font-normal text-gray-700 dark:text-gray-400 text-sm">{pluralize(number_of_bedrooms, 'bedroom')} • {pluralize(number_of_bathrooms, 'bathroom')} • {numeral(total_livable_area).format('0,0')} ft<sup>2</sup></p>
                     <p className="mb-0 font-normal text-gray-700 dark:text-gray-400 text-sm">{location}</p>
+
                 </div>
             </div>
         </div>

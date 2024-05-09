@@ -58,3 +58,9 @@ body {
 .mapboxgl-popup-tip {
   display: none;
 }
+
+.react-tooltip {
+  pointer-events: auto !important;
+  width: 20rem !important;
+  font-size: 12px !important;
+}
