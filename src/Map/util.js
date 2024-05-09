@@ -1,5 +1,5 @@
 import bbox from '@turf/bbox'
-import listingsGeojson from '../../data/philadelphia_homes.geojson' assert { type: 'json' }
+import listingsGeojson from '../data/philadelphia_homes.js'
 
 const dummyGeojson = {
     type: 'FeatureCollection',

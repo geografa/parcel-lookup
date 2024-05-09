@@ -11,6 +11,8 @@ import Card from './Card'
 import Modal from './Modal'
 import { getFeaturesInView } from './Map/util'
 
+import "./styles.css"
+
 export default function Home() {
   const [currentViewData, setCurrentViewData] = useState([])
   const [activeFeature, setActiveFeature] = useState()

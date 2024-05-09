@@ -4,7 +4,7 @@ import {
     faChevronLeft
 } from "@fortawesome/free-solid-svg-icons";
 
-import { pluralize } from '../app/Card'
+import { pluralize } from './Card'
 import StaticMapImage from './StaticMap';
 import MapboxTooltip from './MapboxTooltip';
 

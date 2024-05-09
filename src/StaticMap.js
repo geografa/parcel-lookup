@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 
-import { accessToken } from '../app/Map'
+import { accessToken } from './Map'
 
 const StaticMapImage = ({ lng, lat }) => {
     const [width, setWidth] = useState(0)
