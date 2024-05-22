@@ -50,21 +50,27 @@ const MapboxTooltip = ({ className, title, children }) => {
                 className="block"
             >
                 <div
-                    className={classNames("inline-block rounded-full bg-gray-200 px-1 py-0.5 hover:bg-gray-300 hover:cursor-pointer z-40 border border-gray-400", className)}
+                    className={classNames("inline-block rounded-lg px-2 py-1.5 hover:cursor-pointer z-40 border border-transparent hover:border-gray-400", className)}
+                    style={{ backgroundColor: '#ECEFF5' }}
                 >
                     <div
-                        className="flex items-center"
+                        className="flex items-center text-nowrap"
                         data-tooltip-id={`tooltip-${title}`}
                     >
                         <div className="mr-1"><LogoSVG /></div>
-                        <span className="text-xs pr-1 font-medium">{title}</span>
+                        <span className="text-sm pr-1 font-medium">{title}</span>
                     </div>
                     <Tooltip
                         id={`tooltip-${title}`}
                         content={<Content markdownString={children} />}
                         events={['click']}
 
-                        className="z-50"
+                        className="z-50 w-96 bg-white text-sm font-normal px-4 py-3 rounded-lg"
+                        disableStyleInjection
+                        style={{
+                            boxShadow: `0px 3px 10px 0px rgba(0, 0, 0, 0.2)`
+                        }}
+                        place='bottom-start'
                     />
                 </div>
             </div>

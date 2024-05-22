@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef, useEffect, useState } from 'react'
-import mapboxgl from 'mapbox-gl'
+import mapboxgl from '!mapbox-gl'
 
 import Marker from '../Marker'
 import Card from '../Card'
@@ -45,7 +45,7 @@ const Map = ({ data, onLoad, onFeatureClick }) => {
       <div ref={mapContainer} className='h-full w-full' />
       {mapLoaded && data && data.map((d, i) => (
         <Marker key={i} feature={d} map={mapRef.current}>
-          <Card feature={d} onClick={onFeatureClick}/>
+          <Card feature={d} width={300} shortImage onClick={onFeatureClick}/>
         </Marker>
       ))}
     </>

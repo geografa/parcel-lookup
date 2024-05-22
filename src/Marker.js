@@ -59,11 +59,15 @@ const Marker = ({ feature, map, children }) => {
 
     return (
         <div>
-            <div ref={markerEl} className={classNames('marker px-2 py-1 bg-orange-600 text-white rounded-md box-content shadow hover:bg-orange-800 mapboxgl-marker mapboxgl-marker-anchor-center', {
-                'active': active
-            })}>
+            <div ref={markerEl} className={classNames('marker px-3 py-3  rounded-full box-content shadow hover:bg-gray-200 border hover:border-gray-400 mapboxgl-marker mapboxgl-marker-anchor-center font-bold text-base hover:cursor-pointer', {
+                'bg-gray-200 border-gray-400': active,
+                'bg-white border-transparent': !active
+            })}
+                style={{
+                    boxShadow: '0px 3px 15px 0px rgba(0, 0, 0, 0.2)'
+                }}
+            >
                 <div style={{
-                    fontSize: 11,
                     lineHeight: '12px'
                 }}>${numeral(salePrice).format('0a').toUpperCase()}</div>
             </div>

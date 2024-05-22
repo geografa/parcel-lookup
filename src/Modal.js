@@ -1,12 +1,13 @@
 import numeral from 'numeral'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChevronLeft
+    faTimes
 } from "@fortawesome/free-solid-svg-icons";
 
 import { pluralize } from './Card'
 import StaticMapImage from './StaticMap';
 import MapboxTooltip from './MapboxTooltip';
+import { PropertyData } from './Card';
 
 const Modal = ({ feature, onClose }) => {
     const [lng, lat] = feature.geometry.coordinates
@@ -23,38 +24,37 @@ const Modal = ({ feature, onClose }) => {
         <>
             {/* gray out background */}
             <div
-                className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
             >
-                {/* modal container */}
-                <div className="border-0 w-5/6 shadow-lg absolute top-0 flex flex-col h-full bg-white outline-none focus:outline-none px-6 overflow-scroll">
-                    <div className="flex py-6 sticky top-0 z-50 bg-white">
-                        <div className='w-1/3'>
-                            <button className='flex items-center hover:underline' onClick={onClose}>
-                                <FontAwesomeIcon icon={faChevronLeft} className='mr-3' />
-                                <div>Back</div>
+                {/* modal outer container */}
+                <div className=" shadow-lg absolute flex flex-col px-3 "
+                    style={{
+                        width: 550,
+                        maxWidth: '100%'
+                    }}
+                >
+                    {/* modal inner container */}
+                    <div className='bg-white outline-none focus:outline-none overflow-scroll rounded-2xl my-12 relative'>
+                        <div className='absolute top-0 right-0 m-6'>
+                            <button className='z-50 h-8 w-8 bg-gray-100 hover:bg-gray-200 flex justify-center items-center rounded-md ' onClick={onClose}>
+                                <FontAwesomeIcon icon={faTimes} size='lg' className='text-gray-500' />
                             </button>
                         </div>
-                        <div className='w-1/3 flex justify-center'>
-
-                            <div className="bg-contain bg-center bg-no-repeat" style={{
-                                height: 30,
-                                width: 165,
-                                backgroundImage: 'url("img/housebox-logo.svg")',
-
-                            }}></div>
-                        </div>
-                        <div className='w-1/3'></div>
-                    </div>
-                    <div className='mb-6 grid grid-cols-2 gap-4'>
-                        <div className="bg-cover rounded-lg h-96 " style={{
+                        <div className="bg-cover h-80 lg:h-80 " style={{
                             backgroundImage: `url("${imageUrl}")`
-                        }}></div>
-                        <div className='relative'>
-                            <MapboxTooltip
-                                title='Static Images API'
-                                className='absolute top-3 left-3'
-                            >
-                                {`
+                        }} />
+                        <div className='p-6'>
+                            <PropertyData feature={feature} large />
+                            <p className='mb-6'>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed erat rutrum, eleifend sem eu, blandit nisi. Nullam finibus aliquet nisi nec pharetra. Ut suscipit laoreet est. Cras fringilla justo in rutrum commodo. Nam vehicula lectus id condimentum lacinia.
+                            </p>
+                            <div>
+                                <div className='relative'>
+                                    <MapboxTooltip
+                                        title='Static Images API'
+                                        className='absolute top-3 left-3'
+                                    >
+                                        {`
 The [Mapbox Static Images API](https://docs.mapbox.com/api/maps/static-images/) serves standalone, static map images generated from Mapbox Studio styles. These images can be displayed on web and mobile devices without the aid of a mapping library or API. They look like an embedded map, but do not have interactivity or controls.
 
 This demo uses a custom React component which calculates the dimensions of the containing div, then sets its background image to a map image from the Static Images API with the same dimensions.
@@ -62,36 +62,12 @@ This demo uses a custom React component which calculates the dimensions of the c
 * [Static Images API Playground](https://docs.mapbox.com/playground/static/)
 * [Static Images API Documentation](https://docs.mapbox.com/api/maps/static-images/)
                                 `}
-                            </MapboxTooltip>
-                            <StaticMapImage lng={lng} lat={lat} />
-                        </div>
-                    </div>
-                    <div className="flex mb-6 justify-between">
-                        <div>
-                            <h5 className="mb-1.5 text-3xl font-bold tracking-tight text-gray-900">
-                                ${numeral(sale_price).format('0,0')}
-                            </h5>
-                            <p className="mb-0 font-normal text-gray-800 text-lg">
-                                {location}
-                            </p>
-                        </div>
-                        <div>
-                            <h5 className="mb-1.5 text-3xl font-bold tracking-tight text-gray-900">
-                                {pluralize(number_of_bedrooms, 'bedroom')}
-                            </h5>
-                        </div>
+                                    </MapboxTooltip>
 
-                        <div>
-                            <h5 className="mb-1.5 text-3xl font-bold tracking-tight text-gray-900">
-                                {pluralize(number_of_bathrooms, 'bathroom')}
-                            </h5>
+                                    <StaticMapImage lng={lng} lat={lat} />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h5 className="mb-1.5 text-3xl font-bold tracking-tight text-gray-900">
-                                {numeral(total_livable_area).format('0,0')} ft<sup>2</sup>
-                            </h5>
-                        </div>
-
                     </div>
                 </div>
             </div>
