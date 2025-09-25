@@ -34,3 +34,25 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# CAD files
+*.stl
+*.step
+*.iges
+*.stp
+*.3mf
+*.obj
+*.fbx
+*.dae
+*.3ds
+*.ply
+*.wrl
+*.dwg
+
+# QGIS files
+*.qgs
+*.qgz
+
+# data files
+/public/data/
+/public/baja-data

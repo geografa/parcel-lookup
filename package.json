@@ -2,7 +2,7 @@
   "name": "mapbox-demo-realestate",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/demo-realestate",
+  "homepage": "/baja-land-developers",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

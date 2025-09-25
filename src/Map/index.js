@@ -1,55 +1,51 @@
-'use client'
+"use client";
 
-import React, { useRef, useEffect, useState } from 'react'
-import mapboxgl from '!mapbox-gl'
+import React, { useRef, useEffect, useState } from "react";
+import mapboxgl from "!mapbox-gl";
 
-import Marker from '../Marker'
-import Card from '../Card'
+import Marker from "../Marker";
+import Card from "../Card";
+import { addSourcesAndLayers } from "./util";
 
-import 'mapbox-gl/dist/mapbox-gl.css'
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+// import { TouchPitchHandler } from "mapbox-gl";
 
-
-export const accessToken = mapboxgl.accessToken = 'pk.eyJ1IjoibGFicy1zYW5kYm94IiwiYSI6ImNrMTZuanRmZDA2eGQzYmxqZTlnd21qY3EifQ.Q7DM5HqE5QJzDEnCx8BGFw'
-
+export const accessToken = (mapboxgl.accessToken =
+  "pk.eyJ1IjoiZ3JhZmEiLCJhIjoiY20wdTdlcTM3MTRsZDJxcGxmcW85MzQxMCJ9.H-wLHlLXdbtIQ9R1zsDuJg");
 
 const Map = ({ data, onLoad, onFeatureClick }) => {
-
   // const { FC: featureCollection } = useData()
 
-  const mapContainer = useRef(null)
-  const [mapLoaded, setMapLoaded] = useState(false)
+  const mapContainer = useRef(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-  let mapRef = useRef(null)
-
+  let mapRef = useRef(null);
 
   useEffect(() => {
     const map = (mapRef.current = new mapboxgl.Map({
+      style: "mapbox://styles/mapbox/streets-v11",
       container: mapContainer.current,
-      center: [-75.15654, 39.94596],
-      zoom: 12
-    }))
+      center: [-79.78991, 36.07982],
+      bearing: 0,
+      pitch: 0,
+      zoom: 18,
+    }));
 
-    map.addControl(new mapboxgl.NavigationControl())
+    map.addControl(new mapboxgl.NavigationControl());
 
-    map.on('load', () => {
-      // addSourcesAndLayers(map)
-      onLoad(map)
-      setMapLoaded(true)
-    })
-
-  }, [])
+    map.on("load", () => {
+      addSourcesAndLayers(map);
+      onLoad(map);
+      setMapLoaded(true);
+    });
+  }, []);
 
   return (
     <>
-      <div ref={mapContainer} className='h-full w-full' />
-      {mapLoaded && data && data.map((d, i) => (
-        <Marker key={i} feature={d} map={mapRef.current}>
-          <Card feature={d} width={300} shortImage onClick={onFeatureClick}/>
-        </Marker>
-      ))}
+      <div ref={mapContainer} className="h-full w-full" />
     </>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;
