@@ -3,6 +3,8 @@
 // import React from "react";
 // import { createRoot } from "react-dom/client";
 
+import { faBorderAll } from "@fortawesome/free-solid-svg-icons";
+
 export const addSourcesAndLayers = (map, onParcelClickRef) => {
   // create empty GeoJSON source for selected feature marker
   map.addSource("selected-feature", {
@@ -30,8 +32,8 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
     source: "parcels-tileset",
     "source-layer": "grnsbo-nc-parcel-poly", // adjust source-layer name as needed
     paint: {
-      "fill-color": "rgba(201, 226, 16, 1)",
-      "fill-opacity": 0.1,
+      "fill-color": "#ecbe13",
+      "fill-opacity": ["interpolate", ["linear"], ["zoom"], 15, 0, 18, 0.2],
     },
     slot: "middle",
   });
@@ -44,6 +46,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
     paint: {
       "line-color": "rgba(97, 81, 0, 1)",
       "line-width": 0.8,
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 15, 0, 18, 0.2],
       "line-occlusion-opacity": 0.2,
     },
     slot: "middle",
@@ -259,6 +262,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
           center: center,
           zoom: 18,
           pitch: 60,
+          bearing: 0,
           duration: 1000,
         });
       }
@@ -397,6 +401,7 @@ export const clearAllHighlights = (map) => {
       );
       map.easeTo({
         pitch: 0,
+        bearing: 0,
         zoom: 17, // Adjust to your original zoom level
       });
     } catch (err) {

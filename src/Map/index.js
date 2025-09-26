@@ -35,11 +35,11 @@ const Map = ({ data, onLoad, onFeatureClick, onParcelClick }) => {
     const map = (mapRef.current = new mapboxgl.Map({
       style: "mapbox://styles/grafa/cmb5lcz4m00hp01sy4uamgt72",
       container: mapContainer.current,
-      center: [-79.78991, 36.07982],
+      center: [-79.7897, 36.095],
       bearing: 0,
-      pitch: 0,
+      pitch: 40,
       maxPitch: 60,
-      zoom: 18,
+      zoom: 17,
     }));
 
     map.addControl(new mapboxgl.NavigationControl());
