@@ -46,6 +46,40 @@ export const addSourcesAndLayers = (map) => {
     },
   });
 
+  // add highlighted fill layer for selected parcels
+  map.addLayer({
+    id: "parcels-tileset-fill-highlighted",
+    type: "fill",
+    source: "parcels-tileset",
+    "source-layer": "grnsbo-nc-parcel-poly",
+    paint: {
+      "fill-color": [
+        "case",
+        ["boolean", ["feature-state", "selected"], false],
+        "#ffcc00",
+        "rgba(0,0,0,0)",
+      ],
+      "fill-opacity": [
+        "case",
+        ["boolean", ["feature-state", "selected"], false],
+        0.6,
+        0,
+      ],
+    },
+  });
+
+  // add fallback highlight layer using selected-feature GeoJSON source
+  map.addLayer({
+    id: "selected-feature-highlight",
+    type: "fill",
+    source: "selected-feature",
+    paint: {
+      "fill-color": "#ffcc00",
+      "fill-opacity": 0.6,
+      "fill-outline-color": "#ff9900",
+    },
+  });
+
   // add point layer for labels from grafa.grnsbo-nc-parcel-pts for addresses
   map.addLayer({
     id: "parcels-tileset-labels-address",
@@ -103,6 +137,131 @@ export const addSourcesAndLayers = (map) => {
       ],
       "circle-opacity": 0.8,
     },
+  });
+
+  // Change cursor to pointer when hovering parcels
+  map.on("mouseenter", "parcels-tileset-fill", () => {
+    map.getCanvas().style.cursor = "pointer";
+  });
+  map.on("mouseleave", "parcels-tileset-fill", () => {
+    map.getCanvas().style.cursor = "";
+  });
+
+  // Helper function to compute centroid of polygon
+  const computeCentroid = (geometry) => {
+    if (geometry.type === "Point") {
+      return geometry.coordinates;
+    } else if (geometry.type === "Polygon") {
+      const coords = geometry.coordinates[0];
+      let x = 0,
+        y = 0;
+      for (const coord of coords) {
+        x += coord[0];
+        y += coord[1];
+      }
+      return [x / coords.length, y / coords.length];
+    } else if (geometry.type === "MultiPolygon") {
+      const coords = geometry.coordinates[0][0];
+      let x = 0,
+        y = 0;
+      for (const coord of coords) {
+        x += coord[0];
+        y += coord[1];
+      }
+      return [x / coords.length, y / coords.length];
+    }
+    return null;
+  };
+
+  // Store currently selected feature ID for cleanup
+  let currentSelectedPolygonId = null;
+
+  // Click handler using queryRenderedFeatures around point
+  map.on("click", "parcels-tileset-fill", (e) => {
+    try {
+      // Get the click point in pixel coordinates
+      const clickPoint = e.point;
+
+      // Create a small bounding box around the click point (5px radius)
+      const bbox = [
+        [clickPoint.x - 5, clickPoint.y - 5],
+        [clickPoint.x + 5, clickPoint.y + 5],
+      ];
+
+      // Query rendered features in the bounding box
+      const features = map.queryRenderedFeatures(bbox, {
+        layers: ["parcels-tileset-fill"],
+      });
+
+      if (!features || features.length === 0) {
+        return;
+      }
+
+      // Clear previous selection
+      if (currentSelectedPolygonId !== null) {
+        try {
+          map.setFeatureState(
+            {
+              source: "parcels-tileset",
+              sourceLayer: "grnsbo-nc-parcel-poly",
+              id: currentSelectedPolygonId,
+            },
+            { selected: false }
+          );
+        } catch (err) {
+          console.warn("Error clearing previous selection:", err);
+        }
+      }
+
+      // Get the first feature and try to highlight it
+      const feature = features[0];
+      const featureId =
+        feature.id || feature.properties?.OBJECTID || feature.properties?.FID;
+
+      if (featureId !== undefined) {
+        try {
+          map.setFeatureState(
+            {
+              source: "parcels-tileset",
+              sourceLayer: "grnsbo-nc-parcel-poly",
+              id: featureId,
+            },
+            { selected: true }
+          );
+          currentSelectedPolygonId = featureId;
+          // Clear GeoJSON fallback since feature state worked
+          map.getSource("selected-feature").setData({
+            type: "FeatureCollection",
+            features: [],
+          });
+        } catch (err) {
+          console.warn("Error setting feature state:", err);
+          // Fall back to GeoJSON source if feature state fails
+          map.getSource("selected-feature").setData({
+            type: "FeatureCollection",
+            features: [feature],
+          });
+        }
+      } else {
+        // No feature ID available, use GeoJSON fallback
+        map.getSource("selected-feature").setData({
+          type: "FeatureCollection",
+          features: [feature],
+        });
+      }
+
+      // Fly to the feature centroid
+      const center = computeCentroid(feature.geometry);
+      if (center) {
+        map.flyTo({
+          center: center,
+          zoom: 18,
+          duration: 1000,
+        });
+      }
+    } catch (err) {
+      console.warn("Click handler error:", err);
+    }
   });
 };
 

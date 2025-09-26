@@ -9,7 +9,7 @@ This is a React-based real estate mapping application (despite outdated Next.js 
 - React 18 with `react-scripts` build system
 - Mapbox GL JS v3.3.0 with satellite map style
 - TailwindCSS for styling
-- React Router with basename `/parcel-lookup` for GitHub Pages deployment
+- React Router with basename `/` for GitHub Pages deployment
 
 ## Core Application Flow
 
@@ -77,7 +77,7 @@ npm test            # Jest tests
 
 **Deployment Notes:**
 
-- Configured for `/parcel-lookup` subdirectory deployment
+- Configured for `/` subdirectory deployment
 - Uses public Mapbox token (replace for production: `accessToken` in `Map/index.js`)
 
 ## GIS Data Integration
