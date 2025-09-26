@@ -1,16 +1,17 @@
-import bbox from "@turf/bbox";
-import mapboxgl from "mapbox-gl";
-import parcelsGeojson from "../data/san-quinten-parcels.geojson";
-
-const color = "orange";
+// import bbox from "@turf/bbox";
+// import mapboxgl from "mapbox-gl";
+// import React from "react";
+// import { createRoot } from "react-dom/client";
 
 export const addSourcesAndLayers = (map) => {
-  // add a geojson layer from ./data/san-quinten-parcels.geojson
-  map.addSource("parcels", {
+  // create empty GeoJSON source for selected feature marker
+  map.addSource("selected-feature", {
     type: "geojson",
-    data: parcelsGeojson,
+    data: {
+      type: "FeatureCollection",
+      features: [],
+    },
   });
-
   // add a vector source from mapbox tileset grafa.grnsbo-nc-parcel-poly
   map.addSource("parcels-tileset", {
     type: "vector",
@@ -20,34 +21,6 @@ export const addSourcesAndLayers = (map) => {
   map.addSource("parcels-tileset-pts", {
     type: "vector",
     url: "mapbox://grafa.grnsbo-nc-parcel-pts",
-  });
-  // add parcel-fill layer
-  map.addLayer({
-    id: "parcels-fill",
-    type: "fill",
-    source: "parcels",
-    paint: {
-      "fill-color": "rgba(0, 208, 208, 1)",
-      "fill-opacity": 0.6,
-    },
-    layout: {
-      visibility: "none", // hidden by default since tileset is initial
-    },
-    filter: ["==", "$type", "Polygon"],
-  });
-  // add parcel line layer
-  map.addLayer({
-    id: "parcels-line",
-    type: "line",
-    source: "parcels",
-    paint: {
-      "line-color": "yellow",
-      "line-width": 0.8,
-    },
-    layout: {
-      visibility: "none", // hidden by default since tileset is initial
-    },
-    filter: ["==", "$type", "LineString"],
   });
 
   // add parcel-tileset-fill layer
@@ -96,28 +69,41 @@ export const addSourcesAndLayers = (map) => {
       "text-color": "rgba(57, 47, 0, 1)",
     },
   });
-};
 
-export const zoomExtent = (geojson, map) => {
-  if (geojson.features.length === 0) return;
-
-  // if the data is a single point, flyTo()
-  if (
-    geojson.features.filter((feature) => feature.geometry).length === 1 &&
-    geojson.features[0].geometry.type === "Point"
-  ) {
-    map.flyTo({
-      center: geojson.features[0].geometry.coordinates,
-      zoom: 6,
-      duration: 1000,
-    });
-  } else {
-    const bounds = bbox(geojson);
-    map.fitBounds(bounds, {
-      padding: 50,
-      duration: 1000,
-    });
-  }
+  // add highlighted point layer for selected parcels
+  map.addLayer({
+    id: "parcels-tileset-pts-highlighted",
+    type: "circle",
+    source: "parcels-tileset-pts",
+    "source-layer": "grnsbo-nc-parcel-pts",
+    paint: {
+      "circle-radius": [
+        "case",
+        ["boolean", ["feature-state", "selected"], false],
+        12, // larger radius when selected
+        0, // invisible when not selected
+      ],
+      "circle-color": [
+        "case",
+        ["boolean", ["feature-state", "selected"], false],
+        "#ff4444", // red when selected
+        "transparent",
+      ],
+      "circle-stroke-color": [
+        "case",
+        ["boolean", ["feature-state", "selected"], false],
+        "#ffffff", // white stroke when selected
+        "transparent",
+      ],
+      "circle-stroke-width": [
+        "case",
+        ["boolean", ["feature-state", "selected"], false],
+        3, // thick stroke when selected
+        0,
+      ],
+      "circle-opacity": 0.8,
+    },
+  });
 };
 
 export const getFeaturesInView = (map) => {
@@ -127,8 +113,6 @@ export const getFeaturesInView = (map) => {
   const features = map.queryRenderedFeatures({
     layers: ["parcels-tileset-labels-address"],
   });
-
-  console.log("Features in view:", features.length);
 
   return features.slice(0, 60).map((feature, i) => {
     // Create a mock property structure similar to real estate listings
@@ -140,52 +124,50 @@ export const getFeaturesInView = (map) => {
       } ${feature.properties.SADDSTTYP || ""}`.trim(),
       imageUrl: `baja-land-developers/img/demo-real-estate-popup-${i % 3}.png`,
     };
+    const coordinates = feature.geometry.coordinates;
 
     return {
       ...feature,
       properties,
+      geometry: { type: "Point", coordinates: coordinates },
     };
   });
 };
 
-// Store reference to current marker for cleanup
-let currentSelectedMarker = null;
+// Store reference to currently selected feature for cleanup
+let currentSelectedFeatureId = null;
 
-export const flyToFeatureAndAddMarker = (feature, map) => {
+export const flyToFeatureAndHighlight = (feature, map) => {
   if (!feature || !map || !feature.geometry) return;
 
-  // Remove existing marker if it exists
-  if (currentSelectedMarker) {
-    currentSelectedMarker.remove();
-    currentSelectedMarker = null;
+  // Remove previous selection
+  if (currentSelectedFeatureId !== null) {
+    map.setFeatureState(
+      {
+        source: "parcels-tileset-pts",
+        sourceLayer: "grnsbo-nc-parcel-pts",
+        id: currentSelectedFeatureId,
+      },
+      { selected: false }
+    );
   }
 
-  // Create marker element - you can choose between CSS circle or image
-  const markerElement = document.createElement("div");
-  markerElement.className = "selected-feature-marker";
+  // Set new selection - use feature.id if available, otherwise use a property as ID
+  const featureId =
+    feature.id || feature.properties.OBJECTID || feature.properties.FID;
 
-  // Option 1: CSS-based circle marker (current)
-  markerElement.style.width = "24px";
-  markerElement.style.height = "24px";
-  markerElement.style.backgroundColor = "#ff4444";
-  markerElement.style.border = "3px solid white";
-  markerElement.style.borderRadius = "50%";
-  markerElement.style.boxShadow = "0 2px 8px rgba(0,0,0,0.4)";
-  markerElement.style.cursor = "pointer";
-  markerElement.style.zIndex = "1000";
+  if (featureId !== undefined) {
+    map.setFeatureState(
+      {
+        source: "parcels-tileset-pts",
+        sourceLayer: "grnsbo-nc-parcel-pts",
+        id: featureId,
+      },
+      { selected: true }
+    );
 
-  // Option 2: Image-based marker (uncomment to use)
-  // markerElement.style.width = "32px";
-  // markerElement.style.height = "32px";
-  // markerElement.style.backgroundImage = "url('/img/marker-icon.png')";
-  // markerElement.style.backgroundSize = "contain";
-  // markerElement.style.backgroundRepeat = "no-repeat";
-  // markerElement.style.cursor = "pointer";
-
-  // Create the marker
-  currentSelectedMarker = new mapboxgl.Marker(markerElement)
-    .setLngLat(feature.geometry.coordinates)
-    .addTo(map);
+    currentSelectedFeatureId = featureId;
+  }
 
   // Fly to the feature location
   map.flyTo({
@@ -193,20 +175,4 @@ export const flyToFeatureAndAddMarker = (feature, map) => {
     zoom: 18,
     duration: 1000,
   });
-};
-
-export const toggleParcelSource = (map, useTileset = false) => {
-  if (useTileset) {
-    // Hide GeoJSON parcel layers
-    map.setLayoutProperty("parcels-fill", "visibility", "none");
-    map.setLayoutProperty("parcels-line", "visibility", "none");
-    // Show tileset parcel layer
-    map.setLayoutProperty("parcels-tileset-fill", "visibility", "visible");
-  } else {
-    // Show GeoJSON parcel layers
-    map.setLayoutProperty("parcels-fill", "visibility", "visible");
-    map.setLayoutProperty("parcels-line", "visibility", "visible");
-    // Hide tileset parcel layer
-    map.setLayoutProperty("parcels-tileset-fill", "visibility", "none");
-  }
 };

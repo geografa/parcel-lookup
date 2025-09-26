@@ -7,7 +7,6 @@ export const pluralize = (number, word) => {
 
 export const PropertyData = ({ feature, large = false }) => {
   const { SADDNO, SADDSTR, SADDSTTYP, location } = feature.properties || {};
-  console.log(feature.properties);
 
   const largerTextClass = large ? "text-2xl" : "text-xl";
   const smallerTextClass = large ? "text-base" : "text-sm";

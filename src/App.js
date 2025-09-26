@@ -10,21 +10,12 @@ import MapboxTooltip from "./MapboxTooltip";
 import Map from "./Map";
 import Card from "./Card";
 import Modal from "./Modal";
-import {
-  getFeaturesInView,
-  toggleParcelSource,
-  flyToFeatureAndAddMarker,
-} from "./Map/util";
-import housebuyLogo from "./img/geografa_logo.svg";
+import { getFeaturesInView, flyToFeatureAndHighlight } from "./Map/util";
+import companyLogo from "./img/geografa_logo.svg";
 
 import "./styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMap,
-  faList,
-  faToggleOn,
-  faToggleOff,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMap, faList } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   const [currentViewData, setCurrentViewData] = useState([]);
@@ -32,7 +23,6 @@ export default function Home() {
   const [searchValue, setSearchValue] = useState("");
   const mapInstanceRef = useRef();
   const [activeMobileView, setActiveMobileView] = useState("map");
-  const [useTilesetParcels, setUseTilesetParcels] = useState(true);
 
   const handleMapLoad = (map) => {
     mapInstanceRef.current = map;
@@ -47,9 +37,9 @@ export default function Home() {
   const handleFeatureClick = (feature) => {
     setActiveFeature(feature);
 
-    // Fly to the feature and add a marker
+    // Fly to the feature and highlight it using feature state
     if (mapInstanceRef.current) {
-      flyToFeatureAndAddMarker(feature, mapInstanceRef.current);
+      flyToFeatureAndHighlight(feature, mapInstanceRef.current);
     }
   };
 
@@ -69,45 +59,21 @@ export default function Home() {
     }
   };
 
-  const handleParcelSourceToggle = () => {
-    if (mapInstanceRef.current) {
-      const newUseTileset = !useTilesetParcels;
-      toggleParcelSource(mapInstanceRef.current, newUseTileset);
-      setUseTilesetParcels(newUseTileset);
-    }
-  };
-
   return (
     <>
       {activeFeature && (
         <Modal feature={activeFeature} onClose={handleModalClose} />
       )}
       <main className="flex flex-col h-full">
-        <div className="flex shrink-0 justify-between h-16 items-center border-b border-gray-200 px-4">
-          <button
-            onClick={handleParcelSourceToggle}
-            className="flex items-center text-sm text-gray-600 hover:text-gray-800"
-            title={
-              useTilesetParcels
-                ? "Switch to GeoJSON Parcels"
-                : "Switch to Tileset Parcels"
-            }
-          >
-            <FontAwesomeIcon
-              icon={useTilesetParcels ? faToggleOn : faToggleOff}
-              className="mr-2 text-blue-500"
-            />
-            {useTilesetParcels ? "Tileset" : "GeoJSON"}
-          </button>
+        <div className="flex shrink-0 justify-center h-16 items-center border-b border-gray-200 px-4">
           <div
             className="bg-contain bg-center bg-no-repeat"
             style={{
               height: 30,
               width: 165,
-              backgroundImage: `url(${housebuyLogo})`,
+              backgroundImage: `url(${companyLogo})`,
             }}
           ></div>
-          <div className="w-20"></div> {/* Spacer for centering */}
         </div>
         <div className="px-3 flex shrink-0 justify-start h-14 items-center border-b border-gray-200  overflow-scroll">
           <MapboxTooltip title="Our Projects" className="mr-3">

@@ -8,8 +8,9 @@ import MapboxTooltip from "./MapboxTooltip";
 import { PropertyData } from "./Card";
 
 const Modal = ({ feature, onClose }) => {
+  // based on the feature clicked, get coordinates and imageUrl
   const [lng, lat] = feature.geometry?.coordinates || [0, 0];
-  const { imageUrl, location } = feature.properties || {};
+  const { imageUrl } = feature.properties || {};
 
   return (
     <>

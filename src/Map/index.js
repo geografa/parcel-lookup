@@ -3,8 +3,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "!mapbox-gl";
 
-import Marker from "../Marker";
-import Card from "../Card";
+// import Marker from "../Marker";
+// import Card from "../Card";
 import { addSourcesAndLayers } from "./util";
 
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -29,6 +29,7 @@ const Map = ({ data, onLoad, onFeatureClick }) => {
       center: [-79.78991, 36.07982],
       bearing: 0,
       pitch: 0,
+      maxPitch: 60,
       zoom: 18,
     }));
 
