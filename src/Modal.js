@@ -47,13 +47,13 @@ const Modal = ({ feature, onClose }) => {
             />
             <div className="p-6">
               <PropertyData feature={feature} large />
-              <p className="mb-6">
+              {/* <p className="mb-6">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
                 sed erat rutrum, eleifend sem eu, blandit nisi. Nullam finibus
                 aliquet nisi nec pharetra. Ut suscipit laoreet est. Cras
                 fringilla justo in rutrum commodo. Nam vehicula lectus id
                 condimentum lacinia.
-              </p>
+              </p> */}
               <div>
                 <div className="relative">
                   <MapboxTooltip

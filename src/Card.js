@@ -6,7 +6,8 @@ export const pluralize = (number, word) => {
 };
 
 export const PropertyData = ({ feature, large = false }) => {
-  const { SADDNO, SADDSTR, SADDSTTYP, location } = feature.properties || {};
+  const { OWNNAME, SADDNO, SADDSTR, SADDSTTYP, location, details } =
+    feature.properties || {};
 
   const largerTextClass = large ? "text-2xl" : "text-xl";
   const smallerTextClass = large ? "text-base" : "text-sm";
@@ -20,7 +21,7 @@ export const PropertyData = ({ feature, large = false }) => {
           largerTextClass
         )}
       >
-        {SADDNO || "N/A"}
+        {OWNNAME || "N/A"}
       </h5>
       {location && (
         <p
@@ -30,6 +31,16 @@ export const PropertyData = ({ feature, large = false }) => {
           )}
         >
           {location}
+        </p>
+      )}
+      {details && (
+        <p
+          className={classNames(
+            "mb-2 font-normal text-gray-600",
+            smallerTextClass
+          )}
+        >
+          {details}
         </p>
       )}
     </div>

@@ -280,7 +280,12 @@ export const getFeaturesInView = (map) => {
       // Mock real estate data based on parcel info
       location: `${feature.properties.SADDNO || ""} ${
         feature.properties.SADDSTR || ""
-      } ${feature.properties.SADDSTTYP || ""}`.trim(),
+      } ${feature.properties.SADDSTTYP || ""} ${
+        feature.properties.SCITY || ""
+      }`.trim(),
+      details: `${"Use: " + feature.properties.PARUSEDESC || "N/A"} · ${
+        "Improvement Value: " + feature.properties.IMPROVVAL || "N/A"
+      } · ${"Land Value: " + feature.properties.LANDVAL || "N/A"}`,
       imageUrl: `img/demo-real-estate-popup-${i % 3}.png`,
     };
     const coordinates = feature.geometry.coordinates;
