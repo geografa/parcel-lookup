@@ -97,7 +97,7 @@ export default function Home() {
           ></div>
         </div>
         <div className="px-3 flex shrink-0 justify-start h-14 items-center border-b border-gray-200  overflow-scroll">
-          <MapboxTooltip title="Our Projects" className="mr-3">
+          <MapboxTooltip title="Developers" className="mr-3">
             {`
 [Mapbox Search JS](https://docs.mapbox.com/mapbox-search-js/guides/) is a set of client-side JavaScript libraries for building interactive search experiences using the [Mapbox Search Service](https://docs.mapbox.com/api/search/).
 
@@ -106,7 +106,7 @@ In addition to the [Search Box](https://docs.mapbox.com/mapbox-search-js/api/rea
 Implementation is available via [React components](https://docs.mapbox.com/mapbox-search-js/api/react/), [Web Components](https://docs.mapbox.com/mapbox-search-js/api/web/), or via the [Core package](https://docs.mapbox.com/mapbox-search-js/core/) which exposes lower-level functionality and allows you to craft a custom UX.          
             `}
           </MapboxTooltip>
-          <MapboxTooltip title="About Us" className={"mr-3"}>
+          <MapboxTooltip title="Realtors" className={"mr-3"}>
             {`
 [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/guides) is a client-side JavaScript library for building web maps and web applications with Mapbox's modern mapping technology. You can use Mapbox GL JS to display Mapbox maps in a web browser or client, add user interactivity, and customize the map experience in your application.
 
@@ -117,7 +117,7 @@ In this demo, Mapbox GL JS is used via a custom React component. Once the map is
 `}
           </MapboxTooltip>
 
-          <MapboxTooltip title="Purchase Info" className={"mr-3"}>
+          <MapboxTooltip title="Buyers" className={"mr-3"}>
             {`
 [Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is the default style used by Mapbox maps. Styles include all of the data and complex symbology for the map, including colors, labels, fonts, atmosphere, etc. Styles are highly customizable, but Mapbox Standard provides a professionally-designed general purpose map style to add your own data to. 
 
@@ -198,11 +198,11 @@ In this demo, a popup is rendering a custom React Card component. (The same comp
           {/* sidebar */}
           <div className="absolute lg:static top-0 p-4 w-full lg:w-96 shadow-xl z-10 overflow-scroll lg:z-30 h-full lg:h-auto bg-white">
             <div className="text-2xl text-black font-semibold w-full mb-1.5">
-              Listings in this Area
+              Parcels in this Area
             </div>
             <div className="mb-4 flex items-center justify-between">
               <div className="font-medium text-gray-500">
-                {currentViewData.length} results
+                {currentViewData.length} parcels
               </div>
               {pinnedFeature && (
                 <button

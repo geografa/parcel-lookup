@@ -33,6 +33,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
       "fill-color": "rgba(201, 226, 16, 1)",
       "fill-opacity": 0.1,
     },
+    slot: "middle",
   });
   // add parcel-tileset-line layer
   map.addLayer({
@@ -43,7 +44,9 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
     paint: {
       "line-color": "rgba(97, 81, 0, 1)",
       "line-width": 0.8,
+      "line-occlusion-opacity": 0.2,
     },
+    slot: "middle",
   });
 
   // add highlighted fill layer for selected parcels
@@ -66,6 +69,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
         0,
       ],
     },
+    slot: "middle",
   });
 
   // add fallback highlight layer using selected-feature GeoJSON source
@@ -78,6 +82,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
       "fill-opacity": 0.6,
       "fill-outline-color": "#ff9900",
     },
+    slot: "middle",
   });
 
   // add point layer for labels from grafa.grnsbo-nc-parcel-pts for addresses
@@ -253,6 +258,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
         map.flyTo({
           center: center,
           zoom: 18,
+          pitch: 60,
           duration: 1000,
         });
       }
@@ -260,6 +266,11 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
       // Call the onParcelClick callback with a converted feature format
       if (onParcelClickRef?.current && feature.properties) {
         // Convert polygon feature to point feature format expected by sidebar
+        const formatToDollar = (value) => {
+          if (isNaN(value)) return "N/A";
+          return `$${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+        };
+
         const convertedFeature = {
           ...feature,
           properties: {
@@ -269,9 +280,13 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
             } ${feature.properties.SADDSTTYP || ""} ${
               feature.properties.SCITY || ""
             }`.trim(),
-            details: `${"Use: " + feature.properties.PARUSEDESC || "N/A"} · ${
-              "Improvement Value: " + feature.properties.IMPROVVAL || "N/A"
-            } · ${"Land Value: " + feature.properties.LANDVAL || "N/A"}`,
+            details: `Use: ${feature.properties.PARUSEDESC || "N/A"}
+                      Improved Value: ${
+                        formatToDollar(feature.properties.IMPROVVAL) || "N/A"
+                      }
+                      Land Value: ${
+                        formatToDollar(feature.properties.LANDVAL) || "N/A"
+                      }`,
             imageUrl: `img/demo-real-estate-popup-${Math.floor(
               Math.random() * 3
             )}.png`,
@@ -304,10 +319,10 @@ export const getFeaturesInView = (map) => {
       } ${feature.properties.SADDSTTYP || ""} ${
         feature.properties.SCITY || ""
       }`.trim(),
-      details: `${"Use: " + feature.properties.PARUSEDESC || "N/A"} · ${
-        "Improvement Value: " + feature.properties.IMPROVVAL || "N/A"
-      } · ${"Land Value: " + feature.properties.LANDVAL || "N/A"}`,
-      imageUrl: `img/demo-real-estate-popup-${i % 3}.png`,
+      details: `Use: ${feature.properties.PARUSEDESC || "N/A"}
+Improvement Value: ${feature.properties.IMPROVVAL || "N/A"}
+Land Value: ${feature.properties.LANDVAL || "N/A"}`,
+      imageUrl: `img/demo-real-estate-popup-${i % 5}.png`,
     };
     const coordinates = feature.geometry.coordinates;
 
@@ -380,6 +395,10 @@ export const clearAllHighlights = (map) => {
         },
         { selected: false }
       );
+      map.easeTo({
+        pitch: 0,
+        zoom: 17, // Adjust to your original zoom level
+      });
     } catch (err) {
       console.warn("Error clearing polygon highlight:", err);
     }
