@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import classNames from "classnames";
 import { SearchBox } from "@mapbox/search-js-react";
 import mapboxgl from "mapbox-gl";
@@ -10,7 +10,7 @@ import MapboxTooltip from "./MapboxTooltip";
 import Map from "./Map";
 import Card from "./Card";
 import Modal from "./Modal";
-import { getFeaturesInView, flyToFeatureAndHighlight } from "./Map/util";
+import { getFeaturesInView, flyToFeatureAndHighlight, clearAllHighlights } from "./Map/util";
 import companyLogo from "./img/geografa_logo.svg";
 
 import "./styles.css";
@@ -20,6 +20,7 @@ import { faMap, faList } from "@fortawesome/free-solid-svg-icons";
 export default function Home() {
   const [currentViewData, setCurrentViewData] = useState([]);
   const [activeFeature, setActiveFeature] = useState();
+  const [pinnedFeature, setPinnedFeature] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const mapInstanceRef = useRef();
   const [activeMobileView, setActiveMobileView] = useState("map");
@@ -42,6 +43,22 @@ export default function Home() {
       flyToFeatureAndHighlight(feature, mapInstanceRef.current);
     }
   };
+
+  const handleParcelClick = useCallback((feature) => {
+    // Pin the clicked feature to the top of the sidebar
+    setPinnedFeature(feature);
+    // Also open the modal for the feature
+    setActiveFeature(feature);
+  }, []);
+
+  const handleClearPin = useCallback(() => {
+    // Clear the pinned feature
+    setPinnedFeature(null);
+    // Clear all map highlights
+    if (mapInstanceRef.current) {
+      clearAllHighlights(mapInstanceRef.current);
+    }
+  }, []);
 
   const handleModalClose = () => {
     setActiveFeature(undefined);
@@ -171,6 +188,7 @@ In this demo, a popup is rendering a custom React Card component. (The same comp
               data={currentViewData}
               onLoad={handleMapLoad}
               onFeatureClick={handleFeatureClick}
+              onParcelClick={handleParcelClick}
             />
           </div>
           {/* sidebar */}
@@ -178,19 +196,44 @@ In this demo, a popup is rendering a custom React Card component. (The same comp
             <div className="text-2xl text-black font-semibold w-full mb-1.5">
               Listings in this Area
             </div>
-            <div className="mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <div className="font-medium text-gray-500">
                 {currentViewData.length} results
               </div>
+              {pinnedFeature && (
+                <button
+                  onClick={handleClearPin}
+                  className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors duration-200"
+                  title="Clear selected parcel and remove highlights"
+                >
+                  Clear Pin
+                </button>
+              )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-              {currentViewData.map((feature, i) => {
-                return (
-                  <div key={i} className="mb-1.5">
-                    <Card feature={feature} onClick={handleFeatureClick} />
+              {pinnedFeature && (
+                <div className="mb-1.5 border-2 border-yellow-400 rounded-lg">
+                  <div className="text-xs text-yellow-600 font-semibold px-2 pt-1">
+                    📍 SELECTED PARCEL
                   </div>
-                );
-              })}
+                  <Card feature={pinnedFeature} onClick={handleFeatureClick} />
+                </div>
+              )}
+              {currentViewData
+                .filter(
+                  (feature) =>
+                    !pinnedFeature ||
+                    (feature.properties?.OBJECTID !==
+                      pinnedFeature.properties?.OBJECTID &&
+                      feature.properties?.FID !== pinnedFeature.properties?.FID)
+                )
+                .map((feature, i) => {
+                  return (
+                    <div key={i} className="mb-1.5">
+                      <Card feature={feature} onClick={handleFeatureClick} />
+                    </div>
+                  );
+                })}
             </div>
           </div>
           {/* end sidebar */}

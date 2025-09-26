@@ -17,13 +17,19 @@ export const accessToken = (mapboxgl.accessToken =
   process.env.REACT_APP_MAPBOX_TOKEN ||
   "pk.eyJ1IjoiZ3JhZmEiLCJhIjoiY20wdTdlcTM3MTRsZDJxcGxmcW85MzQxMCJ9.H-wLHlLXdbtIQ9R1zsDuJg");
 
-const Map = ({ data, onLoad, onFeatureClick }) => {
+const Map = ({ data, onLoad, onFeatureClick, onParcelClick }) => {
   // const { FC: featureCollection } = useData()
 
   const mapContainer = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const onParcelClickRef = useRef(onParcelClick);
 
   let mapRef = useRef(null);
+
+  // Update the ref when the callback changes
+  useEffect(() => {
+    onParcelClickRef.current = onParcelClick;
+  }, [onParcelClick]);
 
   useEffect(() => {
     const map = (mapRef.current = new mapboxgl.Map({
@@ -39,11 +45,18 @@ const Map = ({ data, onLoad, onFeatureClick }) => {
     map.addControl(new mapboxgl.NavigationControl());
 
     map.on("load", () => {
-      addSourcesAndLayers(map);
+      addSourcesAndLayers(map, onParcelClickRef);
       onLoad(map);
       setMapLoaded(true);
     });
-  }, []);
+
+    // Cleanup function to remove the map
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+    };
+  }, []); // Empty dependency array - only run once
 
   return (
     <>

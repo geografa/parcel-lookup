@@ -3,7 +3,7 @@
 // import React from "react";
 // import { createRoot } from "react-dom/client";
 
-export const addSourcesAndLayers = (map) => {
+export const addSourcesAndLayers = (map, onParcelClickRef) => {
   // create empty GeoJSON source for selected feature marker
   map.addSource("selected-feature", {
     type: "geojson",
@@ -173,9 +173,6 @@ export const addSourcesAndLayers = (map) => {
     return null;
   };
 
-  // Store currently selected feature ID for cleanup
-  let currentSelectedPolygonId = null;
-
   // Click handler using queryRenderedFeatures around point
   map.on("click", "parcels-tileset-fill", (e) => {
     try {
@@ -259,6 +256,30 @@ export const addSourcesAndLayers = (map) => {
           duration: 1000,
         });
       }
+
+      // Call the onParcelClick callback with a converted feature format
+      if (onParcelClickRef?.current && feature.properties) {
+        // Convert polygon feature to point feature format expected by sidebar
+        const convertedFeature = {
+          ...feature,
+          properties: {
+            ...feature.properties,
+            location: `${feature.properties.SADDNO || ""} ${
+              feature.properties.SADDSTR || ""
+            } ${feature.properties.SADDSTTYP || ""} ${
+              feature.properties.SCITY || ""
+            }`.trim(),
+            details: `${"Use: " + feature.properties.PARUSEDESC || "N/A"} · ${
+              "Improvement Value: " + feature.properties.IMPROVVAL || "N/A"
+            } · ${"Land Value: " + feature.properties.LANDVAL || "N/A"}`,
+            imageUrl: `img/demo-real-estate-popup-${Math.floor(
+              Math.random() * 3
+            )}.png`,
+          },
+          geometry: { type: "Point", coordinates: center },
+        };
+        onParcelClickRef.current(convertedFeature);
+      }
     } catch (err) {
       console.warn("Click handler error:", err);
     }
@@ -339,4 +360,56 @@ export const flyToFeatureAndHighlight = (feature, map) => {
     zoom: 18,
     duration: 1000,
   });
+};
+
+// Store reference to currently selected polygon ID for external access
+let currentSelectedPolygonId = null;
+
+// Clear all highlights from the map
+export const clearAllHighlights = (map) => {
+  if (!map) return;
+
+  // Clear polygon highlights
+  if (currentSelectedPolygonId !== null) {
+    try {
+      map.setFeatureState(
+        {
+          source: "parcels-tileset",
+          sourceLayer: "grnsbo-nc-parcel-poly",
+          id: currentSelectedPolygonId,
+        },
+        { selected: false }
+      );
+    } catch (err) {
+      console.warn("Error clearing polygon highlight:", err);
+    }
+    currentSelectedPolygonId = null;
+  }
+
+  // Clear point highlights
+  if (currentSelectedFeatureId !== null) {
+    try {
+      map.setFeatureState(
+        {
+          source: "parcels-tileset-pts",
+          sourceLayer: "grnsbo-nc-parcel-pts",
+          id: currentSelectedFeatureId,
+        },
+        { selected: false }
+      );
+    } catch (err) {
+      console.warn("Error clearing point highlight:", err);
+    }
+    currentSelectedFeatureId = null;
+  }
+
+  // Clear GeoJSON fallback
+  try {
+    map.getSource("selected-feature").setData({
+      type: "FeatureCollection",
+      features: [],
+    });
+  } catch (err) {
+    console.warn("Error clearing GeoJSON highlights:", err);
+  }
 };
