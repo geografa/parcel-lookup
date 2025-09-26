@@ -10,7 +10,11 @@ import MapboxTooltip from "./MapboxTooltip";
 import Map from "./Map";
 import Card from "./Card";
 import Modal from "./Modal";
-import { getFeaturesInView, flyToFeatureAndHighlight, clearAllHighlights } from "./Map/util";
+import {
+  getFeaturesInView,
+  flyToFeatureAndHighlight,
+  clearAllHighlights,
+} from "./Map/util";
 import companyLogo from "./img/geografa_logo.svg";
 
 import "./styles.css";
