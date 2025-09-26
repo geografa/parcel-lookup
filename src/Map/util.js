@@ -122,7 +122,7 @@ export const getFeaturesInView = (map) => {
       location: `${feature.properties.SADDNO || ""} ${
         feature.properties.SADDSTR || ""
       } ${feature.properties.SADDSTTYP || ""}`.trim(),
-      imageUrl: `baja-land-developers/img/demo-real-estate-popup-${i % 3}.png`,
+      imageUrl: `img/demo-real-estate-popup-${i % 3}.png`,
     };
     const coordinates = feature.geometry.coordinates;
 

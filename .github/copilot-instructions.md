@@ -9,7 +9,7 @@ This is a React-based real estate mapping application (despite outdated Next.js 
 - React 18 with `react-scripts` build system
 - Mapbox GL JS v3.3.0 with satellite map style
 - TailwindCSS for styling
-- React Router with basename `/baja-land-developers`
+- React Router with basename `/parcel-lookup` for GitHub Pages deployment
 
 ## Core Application Flow
 
@@ -54,7 +54,6 @@ This is a React-based real estate mapping application (despite outdated Next.js 
 
 - `/src/data/` - GeoJSON and property data
 - `/src/Map/` - Map-specific components and utilities
-- `/public/baja-data/` - Raw GIS files and project assets
 
 **Styling Patterns:**
 
@@ -78,14 +77,13 @@ npm test            # Jest tests
 
 **Deployment Notes:**
 
-- Configured for `/baja-land-developers` subdirectory deployment
+- Configured for `/parcel-lookup` subdirectory deployment
 - Uses public Mapbox token (replace for production: `accessToken` in `Map/index.js`)
 
 ## GIS Data Integration
 
 This project specifically handles:
 
-- **QGIS project files** (`.qgz`) for spatial data management
 - **Multi-layer parcel data** with different feature layers and properties
 - **Coordinate system**: WGS84 (EPSG:4326) for web mapping compatibility
 

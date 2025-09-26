@@ -11,7 +11,10 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 // import { TouchPitchHandler } from "mapbox-gl";
 
+// Use environment variable for Mapbox token in production. CRA inlines
+// REACT_APP_* variables at build time.
 export const accessToken = (mapboxgl.accessToken =
+  process.env.REACT_APP_MAPBOX_TOKEN ||
   "pk.eyJ1IjoiZ3JhZmEiLCJhIjoiY20wdTdlcTM3MTRsZDJxcGxmcW85MzQxMCJ9.H-wLHlLXdbtIQ9R1zsDuJg");
 
 const Map = ({ data, onLoad, onFeatureClick }) => {
