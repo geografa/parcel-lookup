@@ -1,10 +1,3 @@
-// import bbox from "@turf/bbox";
-// import mapboxgl from "mapbox-gl";
-// import React from "react";
-// import { createRoot } from "react-dom/client";
-
-import { faBorderAll } from "@fortawesome/free-solid-svg-icons";
-
 export const addSourcesAndLayers = (map, onParcelClickRef) => {
   // create empty GeoJSON source for selected feature marker
   map.addSource("selected-feature", {
@@ -14,23 +7,38 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
       features: [],
     },
   });
-  // add a vector source from mapbox tileset grafa.grnsbo-nc-parcel-poly
-  map.addSource("parcels-tileset", {
-    type: "vector",
-    url: "mapbox://grafa.grnsbo-nc-parcel-poly",
+  // city boundary from public/data/roswell-city-boundary.geojson
+  map.addSource("roswell-boundary", {
+    type: "geojson",
+    data: "data/roswell-city-boundary.geojson",
   });
-  // add a vector source from mapbox tileset grafa.grnsbo-nc-parcel-pts
-  map.addSource("parcels-tileset-pts", {
+  map.addLayer({
+    id: "roswell-boundary-layer",
+    type: "line",
+    source: "roswell-boundary",
+    paint: {
+      "line-color": "#ec6157",
+      "line-width": 6,
+      "line-opacity": 0.5,
+    },
+  });
+  // add a vector source from mapbox tileset grafa.ga-roswell-parcels
+  map.addSource("ga-parcels-tileset", {
     type: "vector",
-    url: "mapbox://grafa.grnsbo-nc-parcel-pts",
+    url: "mapbox://grafa.ga-roswell-parcels",
+  });
+  // add a vector source from mapbox tileset grafa.ga-roswell-parcels-pts
+  map.addSource("ga-roswell-parcels-pts", {
+    type: "vector",
+    url: "mapbox://grafa.ga-roswell-parcels-pts",
   });
 
   // add parcel-tileset-fill layer
   map.addLayer({
-    id: "parcels-tileset-fill",
+    id: "ga-parcels-tileset-fill",
     type: "fill",
-    source: "parcels-tileset",
-    "source-layer": "grnsbo-nc-parcel-poly", // adjust source-layer name as needed
+    source: "ga-parcels-tileset",
+    "source-layer": "ga-roswell-parcels", // adjust source-layer name as needed
     paint: {
       "fill-color": "#ecbe13",
       "fill-opacity": ["interpolate", ["linear"], ["zoom"], 15, 0, 18, 0.2],
@@ -39,10 +47,10 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
   });
   // add parcel-tileset-line layer
   map.addLayer({
-    id: "parcels-tileset-line",
+    id: "ga-parcels-tileset-line",
     type: "line",
-    source: "parcels-tileset",
-    "source-layer": "grnsbo-nc-parcel-poly", // adjust source-layer name as needed
+    source: "ga-parcels-tileset",
+    "source-layer": "ga-roswell-parcels", // adjust source-layer name as needed
     paint: {
       "line-color": "rgba(97, 81, 0, 1)",
       "line-width": 0.8,
@@ -54,10 +62,10 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
 
   // add highlighted fill layer for selected parcels
   map.addLayer({
-    id: "parcels-tileset-fill-highlighted",
+    id: "ga-parcels-tileset-fill-highlighted",
     type: "fill",
-    source: "parcels-tileset",
-    "source-layer": "grnsbo-nc-parcel-poly",
+    source: "ga-parcels-tileset",
+    "source-layer": "ga-roswell-parcels",
     paint: {
       "fill-color": [
         "case",
@@ -88,22 +96,15 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
     slot: "middle",
   });
 
-  // add point layer for labels from grafa.grnsbo-nc-parcel-pts for addresses
+  // add point layer for labels from grafa.ga-roswell-parcels-pts for addresses
   map.addLayer({
-    id: "parcels-tileset-labels-address",
+    id: "ga-parcels-tileset-labels-address",
     type: "symbol",
-    source: "parcels-tileset-pts",
-    "source-layer": "grnsbo-nc-parcel-pts", // adjust source-layer name as needed
+    source: "ga-roswell-parcels-pts",
+    "source-layer": "ga-roswell-parcels-pts", // adjust source-layer name as needed
     minzoom: 17, // Only visible at zoom level 17 or above
     layout: {
-      "text-field": [
-        "concat",
-        ["get", "SADDNO"],
-        " ",
-        ["get", "SADDSTR"],
-        " ",
-        ["get", "SADDSTTYP"],
-      ], // adjust property names as needed
+      "text-field": ["get", "SITEADDRES"], // adjust property names as needed
       "text-size": 10,
       "text-anchor": "bottom",
     },
@@ -114,10 +115,10 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
 
   // add highlighted point layer for selected parcels
   map.addLayer({
-    id: "parcels-tileset-pts-highlighted",
+    id: "ga-roswell-parcels-pts-highlighted",
     type: "circle",
-    source: "parcels-tileset-pts",
-    "source-layer": "grnsbo-nc-parcel-pts",
+    source: "ga-roswell-parcels-pts",
+    "source-layer": "ga-roswell-parcels-pts",
     paint: {
       "circle-radius": [
         "case",
@@ -148,10 +149,10 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
   });
 
   // Change cursor to pointer when hovering parcels
-  map.on("mouseenter", "parcels-tileset-fill", () => {
+  map.on("mouseenter", "ga-parcels-tileset-fill", () => {
     map.getCanvas().style.cursor = "pointer";
   });
-  map.on("mouseleave", "parcels-tileset-fill", () => {
+  map.on("mouseleave", "ga-parcels-tileset-fill", () => {
     map.getCanvas().style.cursor = "";
   });
 
@@ -182,7 +183,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
   };
 
   // Click handler using queryRenderedFeatures around point
-  map.on("click", "parcels-tileset-fill", (e) => {
+  map.on("click", "ga-parcels-tileset-fill", (e) => {
     try {
       // Get the click point in pixel coordinates
       const clickPoint = e.point;
@@ -195,7 +196,7 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
 
       // Query rendered features in the bounding box
       const features = map.queryRenderedFeatures(bbox, {
-        layers: ["parcels-tileset-fill"],
+        layers: ["ga-parcels-tileset-fill"],
       });
 
       if (!features || features.length === 0) {
@@ -207,8 +208,8 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
         try {
           map.setFeatureState(
             {
-              source: "parcels-tileset",
-              sourceLayer: "grnsbo-nc-parcel-poly",
+              source: "ga-parcels-tileset",
+              sourceLayer: "ga-roswell-parcels",
               id: currentSelectedPolygonId,
             },
             { selected: false }
@@ -227,8 +228,8 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
         try {
           map.setFeatureState(
             {
-              source: "parcels-tileset",
-              sourceLayer: "grnsbo-nc-parcel-poly",
+              source: "ga-parcels-tileset",
+              sourceLayer: "ga-roswell-parcels",
               id: featureId,
             },
             { selected: true }
@@ -269,28 +270,15 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
 
       // Call the onParcelClick callback with a converted feature format
       if (onParcelClickRef?.current && feature.properties) {
-        // Convert polygon feature to point feature format expected by sidebar
-        const formatToDollar = (value) => {
-          if (isNaN(value)) return "N/A";
-          return `$${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-        };
-
+        console.log("Clicked feature:", feature);
         const convertedFeature = {
           ...feature,
           properties: {
             ...feature.properties,
-            location: `${feature.properties.SADDNO || ""} ${
-              feature.properties.SADDSTR || ""
-            } ${feature.properties.SADDSTTYP || ""} ${
-              feature.properties.SCITY || ""
-            }`.trim(),
-            details: `Use: ${feature.properties.PARUSEDESC || "N/A"}
-                      Improved Value: ${
-                        formatToDollar(feature.properties.IMPROVVAL) || "N/A"
-                      }
-                      Land Value: ${
-                        formatToDollar(feature.properties.LANDVAL) || "N/A"
-                      }`,
+            location: feature.properties.SITEADDRES || "N/A",
+            details: `Use: ${feature.properties["USECDDESC_"] || "N/A"}
+                Improved Value: $${feature.properties["ImprAppr_1"] || "N/A"}
+                Land Value: $${feature.properties["LandAppr_1"] || "N/A"}`,
             imageUrl: `img/demo-real-estate-popup-${Math.floor(
               Math.random() * 3
             )}.png`,
@@ -308,24 +296,21 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
 export const getFeaturesInView = (map) => {
   if (!map) return [];
 
-  // Query rendered features from the parcels-tileset-labels-address layer
+  // Query rendered features from the ga-parcels-tileset-labels-address layer
   const features = map.queryRenderedFeatures({
-    layers: ["parcels-tileset-labels-address"],
+    layers: ["ga-parcels-tileset-labels-address"],
   });
 
   return features.slice(0, 60).map((feature, i) => {
+    console.log("Feature in view:", feature);
     // Create a mock property structure similar to real estate listings
     const properties = {
       ...feature.properties,
       // Mock real estate data based on parcel info
-      location: `${feature.properties.SADDNO || ""} ${
-        feature.properties.SADDSTR || ""
-      } ${feature.properties.SADDSTTYP || ""} ${
-        feature.properties.SCITY || ""
-      }`.trim(),
-      details: `Use: ${feature.properties.PARUSEDESC || "N/A"}
-Improvement Value: ${feature.properties.IMPROVVAL || "N/A"}
-Land Value: ${feature.properties.LANDVAL || "N/A"}`,
+      location: feature.properties.SITEADDRES || "N/A",
+      details: `Use: ${feature.properties.USECDDESC_ || "N/A"}
+  Improvement Value: ${feature.properties["ImprAppr_1"] || "N/A"}
+  Land Value: ${feature.properties["LandAppr_1"] || "N/A"}`,
       imageUrl: `img/demo-real-estate-popup-${i % 5}.png`,
     };
     const coordinates = feature.geometry.coordinates;
@@ -348,8 +333,8 @@ export const flyToFeatureAndHighlight = (feature, map) => {
   if (currentSelectedFeatureId !== null) {
     map.setFeatureState(
       {
-        source: "parcels-tileset-pts",
-        sourceLayer: "grnsbo-nc-parcel-pts",
+        source: "ga-roswell-parcels-pts",
+        sourceLayer: "ga-roswell-parcels-pts",
         id: currentSelectedFeatureId,
       },
       { selected: false }
@@ -363,8 +348,8 @@ export const flyToFeatureAndHighlight = (feature, map) => {
   if (featureId !== undefined) {
     map.setFeatureState(
       {
-        source: "parcels-tileset-pts",
-        sourceLayer: "grnsbo-nc-parcel-pts",
+        source: "ga-roswell-parcels-pts",
+        sourceLayer: "ga-roswell-parcels-pts",
         id: featureId,
       },
       { selected: true }
@@ -393,8 +378,8 @@ export const clearAllHighlights = (map) => {
     try {
       map.setFeatureState(
         {
-          source: "parcels-tileset",
-          sourceLayer: "grnsbo-nc-parcel-poly",
+          source: "ga-parcels-tileset",
+          sourceLayer: "ga-roswell-parcels",
           id: currentSelectedPolygonId,
         },
         { selected: false }
@@ -415,8 +400,8 @@ export const clearAllHighlights = (map) => {
     try {
       map.setFeatureState(
         {
-          source: "parcels-tileset-pts",
-          sourceLayer: "grnsbo-nc-parcel-pts",
+          source: "ga-roswell-parcels-pts",
+          sourceLayer: "ga-roswell-parcels-pts",
           id: currentSelectedFeatureId,
         },
         { selected: false }

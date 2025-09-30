@@ -35,7 +35,7 @@ const Map = ({ data, onLoad, onFeatureClick, onParcelClick }) => {
     const map = (mapRef.current = new mapboxgl.Map({
       style: "mapbox://styles/grafa/cmb5lcz4m00hp01sy4uamgt72",
       container: mapContainer.current,
-      center: [-79.7897, 36.095],
+      center: [-84.391, 34.076],
       bearing: 0,
       pitch: 40,
       maxPitch: 60,

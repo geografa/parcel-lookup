@@ -6,7 +6,7 @@ export const pluralize = (number, word) => {
 };
 
 export const PropertyData = ({ feature, large = false }) => {
-  const { OWNNAME, location, PARUSEDESC, IMPROVVAL, LANDVAL } =
+  const { location, USECDDESC_, ImprAppr_1, LandAppr_1 } =
     feature.properties || {};
 
   const largerTextClass = large ? "text-2xl" : "text-xl";
@@ -21,25 +21,16 @@ export const PropertyData = ({ feature, large = false }) => {
           largerTextClass
         )}
       >
-        {OWNNAME || "N/A"}
+        {location || "N/A"}
       </h5>
-      {location && (
-        <p
-          className={classNames(
-            "mb-2 font-normal text-gray-600",
-            smallerTextClass
-          )}
-        >
-          {location}
-        </p>
-      )}
+
       <p
         className={classNames(
           "mb-2 font-normal text-gray-600",
           smallerTextClass
         )}
       >
-        {`Use: ${PARUSEDESC || "N/A"}`}
+        {`Use: ${USECDDESC_ || "N/A"}`}
       </p>
       <p
         className={classNames(
@@ -47,7 +38,7 @@ export const PropertyData = ({ feature, large = false }) => {
           smallerTextClass
         )}
       >
-        {`Improved Value: ${numeral(IMPROVVAL).format("$0,0") || "N/A"}`}
+        {`Improved Value: $${ImprAppr_1 || "N/A"}`}
       </p>
       <p
         className={classNames(
@@ -55,7 +46,7 @@ export const PropertyData = ({ feature, large = false }) => {
           smallerTextClass
         )}
       >
-        {`Land Value: ${numeral(LANDVAL).format("$0,0") || "N/A"}`}
+        {`Land Value: $${LandAppr_1 || "N/A"}`}
       </p>
     </div>
   );

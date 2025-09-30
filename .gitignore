@@ -55,5 +55,5 @@ next-env.d.ts
 *.qgz
 
 # data files
-/public/data/
+/public/data/archive
 /public/baja-data
