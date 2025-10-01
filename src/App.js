@@ -97,13 +97,13 @@ export default function Home() {
           ></div>
         </div>
         <div className="px-3 flex shrink-0 justify-start h-14 items-center border-b border-gray-200  overflow-scroll">
-          <MapboxTooltip title="Developers" className="mr-3">
+          <MapboxTooltip
+            title="Zoning"
+            className="mr-3"
+            mapInstance={mapInstanceRef.current}
+          >
             {`
-[Mapbox Search JS](https://docs.mapbox.com/mapbox-search-js/guides/) is a set of client-side JavaScript libraries for building interactive search experiences using the [Mapbox Search Service](https://docs.mapbox.com/api/search/).
-
-In addition to the [Search Box](https://docs.mapbox.com/mapbox-search-js/api/react/search/) component implemented here, the package can also add address autofill to your app's forms and retrieve suggestion coordinates programmatically. 
-
-Implementation is available via [React components](https://docs.mapbox.com/mapbox-search-js/api/react/), [Web Components](https://docs.mapbox.com/mapbox-search-js/api/web/), or via the [Core package](https://docs.mapbox.com/mapbox-search-js/core/) which exposes lower-level functionality and allows you to craft a custom UX.          
+Land use codes show how each property can be developed or used, such as residential (RS-18), commercial (CX), or civic (CIV). These zoning codes come from the City of Roswell's Unified Development Code.
             `}
           </MapboxTooltip>
           <MapboxTooltip title="Realtors" className={"mr-3"}>
@@ -125,28 +125,6 @@ Mapbox Standard enables a highly performant and elegant 3D mapping experience wi
 
 * [Mapbox Standard Demo](https://labs.mapbox.com/labs-standard/#16.2/48.859605/2.293506/-20/62)
 * [Mapbox Standard Documentation](https://docs.mapbox.com/mapbox-gl-js/guides/styles/?size=n_10_n#mapbox-standard-1)
-`}
-          </MapboxTooltip>
-
-          <MapboxTooltip title="Resources" className={"mr-3"}>
-            {`
-A [Mapbox GL JS Marker](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker) displays an html element at a specific geographic location which stays fixed to the map as the user pans and zooms.
-
-Markers can be fully customized using html and css, and can trigger other actions on click.
-
-* [Add a default marker to a web map](https://docs.mapbox.com/mapbox-gl-js/example/add-a-marker/)
-* [Add custom icons with Markers](https://docs.mapbox.com/mapbox-gl-js/example/custom-marker-icons/)
-`}
-          </MapboxTooltip>
-
-          <MapboxTooltip title="Contact" className={"mr-3"}>
-            {`
-A [Mapbox GL JS Popup](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup) displays text or html fixed to a geographic location on the map. Popups are often combined with markers to show more information when the marker is clicked.
-
-In this demo, a popup is rendering a custom React Card component. (The same component is used to display property listings in the sidebar)
-
-* [Attach a popup to a marker instance](https://docs.mapbox.com/mapbox-gl-js/example/set-popup/)
-* [Popup Documentation](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup)
 `}
           </MapboxTooltip>
         </div>
