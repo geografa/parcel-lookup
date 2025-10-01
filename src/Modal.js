@@ -4,7 +4,6 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import { pluralize } from "./Card";
 import StaticMapImage from "./StaticMap";
-import MapboxTooltip from "./MapboxTooltip";
 import { PropertyData } from "./Card";
 
 const Modal = ({ feature, onClose }) => {
@@ -56,20 +55,6 @@ const Modal = ({ feature, onClose }) => {
               </p> */}
               <div>
                 <div className="relative">
-                  <MapboxTooltip
-                    title="Static Images API"
-                    className="absolute top-3 left-3"
-                  >
-                    {`
-The [Mapbox Static Images API](https://docs.mapbox.com/api/maps/static-images/) serves standalone, static map images generated from Mapbox Studio styles. These images can be displayed on web and mobile devices without the aid of a mapping library or API. They look like an embedded map, but do not have interactivity or controls.
-
-This demo uses a custom React component which calculates the dimensions of the containing div, then sets its background image to a map image from the Static Images API with the same dimensions.
-
-* [Static Images API Playground](https://docs.mapbox.com/playground/static/)
-* [Static Images API Documentation](https://docs.mapbox.com/api/maps/static-images/)
-                                `}
-                  </MapboxTooltip>
-
                   <StaticMapImage lng={lng} lat={lat} />
                 </div>
               </div>
