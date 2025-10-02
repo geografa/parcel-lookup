@@ -87,7 +87,7 @@ export default function Home() {
       )}
       <main className="flex flex-col h-full">
         <div className="shrink-0 justify-left h-20 items-center border-b border-gray-200 px-4 py-2 bg-yellow-600 text-white">
-          <h2 className="text-3xl font-bold">Parcel Lookup Demo</h2>
+          <h2 className="text-3xl font-bold">Property Lookup Demo</h2>
           <p>City of Roswell GA</p>
         </div>
         <div className="px-3 flex shrink-0 justify-start h-14 items-center border-b border-gray-200  overflow-scroll">
