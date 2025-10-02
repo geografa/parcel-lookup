@@ -96,20 +96,24 @@ export default function Home() {
             className="mr-3"
             mapInstance={mapInstanceRef.current}
           >
-            {`
-Land use codes show how each property can be developed or used, such as residential (RS-18), commercial (CX), or civic (CIV). These zoning codes come from the City of Roswell's Unified Development Code.
-            `}
+            {`Land use codes show how each property can be developed or used, such as residential (RS-18), commercial (CX), or civic (CIV).
+
+These zoning codes come from the City of Roswell's Unified Development Code.`}
           </MapboxTooltip>
           <MapboxTooltip title="Value" className="mr-3">
-            {`
-Value data is sourced from the Fulton County Tax Assessor's Office and reflects the assessed values for land and improvements on each parcel. This information is updated annually and is used for property tax calculations.
-`}
+            {`Value data is sourced from the Fulton County Tax Assessor's Office and reflects the assessed values for land and improvements on each parcel.
+
+This information is updated annually and is used for property tax calculations.`}
           </MapboxTooltip>
           <MapboxTooltip title="Credits" className="mr-3">
-            {`
-[City of Roswell Open Data Portal](https://data-roswellga.opendata.arcgis.com/maps/bac168ae8d694f77bae6878b8f46bedf/about)
-            
-Photo Credits:
+            {`Parcel data: [City of Roswell Open Data Portal](https://data-roswellga.opendata.arcgis.com/maps/bac168ae8d694f77bae6878b8f46bedf/about)
+
+Original author: [Chris Whong](https://www.linkedin.com/in/chris-whong-798b587/)
+
+[Real Estate Demo](https://docs.mapbox.com/resources/demos-and-projects/real-estate/)
+
+## Photo Credits:
+
 * [Matt Jones](https://unsplash.com/@mattrobinjones)
 * [Gustavo Zambelli](https://unsplash.com/@zamax)
 * [Gus Ruballo](https://unsplash.com/@gusruballo)
@@ -119,8 +123,7 @@ Photo Credits:
 * [Phil Hearing](https://unsplash.com/@philhearing)
 * [Vu Anh](https://unsplash.com/@naomi365photography)
 * [Johnson](https://unsplash.com/@liujs)
-* [Peter Jan Rijpkema](https://unsplash.com/photos/white-house-pnEtsdgBeBE?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
-`}
+* [Peter Jan Rijpkema](https://unsplash.com/photos/white-house-pnEtsdgBeBE?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)`}
           </MapboxTooltip>
         </div>
         <div className="relative lg:flex grow shrink min-h-0">
