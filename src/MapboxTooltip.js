@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
+  faMapLocation,
   faWrench,
   faMoneyBill,
-  faTree,
+  faSquarePen,
   faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
@@ -125,7 +126,15 @@ const MapboxTooltip = ({ className, title, children, mapInstance }) => {
           >
             <div className="mr-1">
               <FontAwesomeIcon
-                icon={faHouse}
+                icon={
+                  title === "Zoning"
+                    ? faMapLocation
+                    : title === "Value"
+                    ? faMoneyBill
+                    : title === "Credits"
+                    ? faSquarePen
+                    : faMapLocation
+                }
                 className={classNames({
                   "text-gray-700": isOpen,
                   "text-gray-600": !isOpen,

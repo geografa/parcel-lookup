@@ -86,15 +86,9 @@ export default function Home() {
         <Modal feature={activeFeature} onClose={handleModalClose} />
       )}
       <main className="flex flex-col h-full">
-        <div className="flex shrink-0 justify-center h-16 items-center border-b border-gray-200 px-4">
-          <div
-            className="bg-contain bg-center bg-no-repeat"
-            style={{
-              height: 30,
-              width: 165,
-              backgroundImage: `url(${companyLogo})`,
-            }}
-          ></div>
+        <div className="shrink-0 justify-left h-20 items-center border-b border-gray-200 px-4 py-2 bg-yellow-600 text-white">
+          <h2 className="text-3xl font-bold">Parcel Lookup Demo</h2>
+          <p>City of Roswell GA</p>
         </div>
         <div className="px-3 flex shrink-0 justify-start h-14 items-center border-b border-gray-200  overflow-scroll">
           <MapboxTooltip
@@ -106,25 +100,26 @@ export default function Home() {
 Land use codes show how each property can be developed or used, such as residential (RS-18), commercial (CX), or civic (CIV). These zoning codes come from the City of Roswell's Unified Development Code.
             `}
           </MapboxTooltip>
-          <MapboxTooltip title="Realtors" className={"mr-3"}>
+          <MapboxTooltip title="Value" className="mr-3">
             {`
-[Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/guides) is a client-side JavaScript library for building web maps and web applications with Mapbox's modern mapping technology. You can use Mapbox GL JS to display Mapbox maps in a web browser or client, add user interactivity, and customize the map experience in your application.
-
-In this demo, Mapbox GL JS is used via a custom React component. Once the map is rendered, Markers are used to add styled elements to the map based on locations in a static dataset.
-
-* [Use Mapbox GL JS in a React App](https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/)
-* [Mapbox GL JS Code Examples](https://docs.mapbox.com/mapbox-gl-js/example/)
+Value data is sourced from the Fulton County Tax Assessor's Office and reflects the assessed values for land and improvements on each parcel. This information is updated annually and is used for property tax calculations.
 `}
           </MapboxTooltip>
-
-          <MapboxTooltip title="Buyers" className={"mr-3"}>
+          <MapboxTooltip title="Credits" className="mr-3">
             {`
-[Mapbox Standard](https://www.mapbox.com/blog/standard-core-style) is the default style used by Mapbox maps. Styles include all of the data and complex symbology for the map, including colors, labels, fonts, atmosphere, etc. Styles are highly customizable, but Mapbox Standard provides a professionally-designed general purpose map style to add your own data to. 
-
-Mapbox Standard enables a highly performant and elegant 3D mapping experience with powerful dynamic lighting capabilities, landmark 3D buildings, and an expertly crafted symbolic aesthetic.
-
-* [Mapbox Standard Demo](https://labs.mapbox.com/labs-standard/#16.2/48.859605/2.293506/-20/62)
-* [Mapbox Standard Documentation](https://docs.mapbox.com/mapbox-gl-js/guides/styles/?size=n_10_n#mapbox-standard-1)
+[City of Roswell Open Data Portal](https://data-roswellga.opendata.arcgis.com/maps/bac168ae8d694f77bae6878b8f46bedf/about)
+            
+Photo Credits:
+* [Matt Jones](https://unsplash.com/@mattrobinjones)
+* [Gustavo Zambelli](https://unsplash.com/@zamax)
+* [Gus Ruballo](https://unsplash.com/@gusruballo)
+* [Zac Gudakov](https://unsplash.com/@zacgudakov)
+* [Brian Babb](https://unsplash.com/@brianbabb)
+* [Todd Kent](https://unsplash.com/@churchoftodd)
+* [Phil Hearing](https://unsplash.com/@philhearing)
+* [Vu Anh](https://unsplash.com/@naomi365photography)
+* [Johnson](https://unsplash.com/@liujs)
+* [Peter Jan Rijpkema](https://unsplash.com/photos/white-house-pnEtsdgBeBE?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 `}
           </MapboxTooltip>
         </div>

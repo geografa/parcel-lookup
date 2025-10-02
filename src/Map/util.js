@@ -147,6 +147,85 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
       "circle-opacity": 0.8,
     },
   });
+  // add parcel-tileset-fill-zoning layer
+  map.addLayer({
+    id: "ga-parcels-tileset-fill-zoning",
+    type: "fill",
+    source: "ga-parcels-tileset",
+    "source-layer": "ga-roswell-parcels", // adjust source-layer name as needed
+    paint: {
+      "fill-color": [
+        "case",
+        ["==", ["get", "USECD"], "AG-43"],
+        "#f2e4c0",
+        ["==", ["get", "USECD"], "RS-87"],
+        "#ffffbe",
+        ["==", ["get", "USECD"], "RS-30"],
+        "#ffd37f",
+        ["==", ["get", "USECD"], "RS-18"],
+        "#e6e600",
+        ["==", ["get", "USECD"], "RS-12"],
+        "#a8a800",
+        ["==", ["get", "USECD"], "RS-9"],
+        "#ffaa00",
+        ["==", ["get", "USECD"], "RS-6"],
+        "#ff5500",
+        ["==", ["get", "USECD"], "RS-4"],
+        "#a87000",
+        ["==", ["get", "USECD"], "R-CC"],
+        "#efe4be",
+        ["==", ["get", "USECD"], "R-TH"],
+        "#ffd3be",
+        ["==", ["get", "USECD"], "RM-2"],
+        "#e8e8ff",
+        ["==", ["get", "USECD"], "RM-3"],
+        "#c0c0ff",
+        ["==", ["get", "USECD"], "PRD"],
+        "#d3ffbe",
+        ["==", ["get", "USECD"], "PV"],
+        "#ffbebe",
+        ["==", ["get", "USECD"], "RX"],
+        "#73b2ff",
+        ["==", ["get", "USECD"], "NX"],
+        "#ff00c5",
+        ["==", ["get", "USECD"], "CX"],
+        "#d68589",
+        ["==", ["get", "USECD"], "SH"],
+        "#ffff73",
+        ["==", ["get", "USECD"], "CC"],
+        "#dbeaff",
+        ["==", ["get", "USECD"], "CH"],
+        "#e0c4d9",
+        ["==", ["get", "USECD"], "DR"],
+        "#e2ffd5",
+        ["==", ["get", "USECD"], "DX"],
+        "#ffbde8",
+        ["==", ["get", "USECD"], "DS"],
+        "#ffc4b3",
+        ["==", ["get", "USECD"], "DH"],
+        "#ffd3e4",
+        ["==", ["get", "USECD"], "OR"],
+        "#c4ffdb",
+        ["==", ["get", "USECD"], "OP"],
+        "#cdfaff",
+        ["==", ["get", "USECD"], "IX"],
+        "#f0f0f5",
+        ["==", ["get", "USECD"], "IL"],
+        "#cecece",
+        ["==", ["get", "USECD"], "CIV"],
+        "#ec1313",
+        ["==", ["get", "USECD"], "REC"],
+        "#c4ffd9",
+        ["==", ["get", "USECD"], "CON"],
+        "#e0e0e0",
+        /* fallback */ "#cccccc",
+      ],
+      "fill-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0.6, 18, 0.2],
+    },
+    layout: { visibility: "none" },
+    minzoom: 14,
+    slot: "middle",
+  });
 
   // Change cursor to pointer when hovering parcels
   map.on("mouseenter", "ga-parcels-tileset-fill", () => {
@@ -270,7 +349,6 @@ export const addSourcesAndLayers = (map, onParcelClickRef) => {
 
       // Call the onParcelClick callback with a converted feature format
       if (onParcelClickRef?.current && feature.properties) {
-        console.log("Clicked feature:", feature);
         const convertedFeature = {
           ...feature,
           properties: {
@@ -302,7 +380,6 @@ export const getFeaturesInView = (map) => {
   });
 
   return features.slice(0, 60).map((feature, i) => {
-    console.log("Feature in view:", feature);
     // Create a mock property structure similar to real estate listings
     const properties = {
       ...feature.properties,
@@ -311,7 +388,7 @@ export const getFeaturesInView = (map) => {
       details: `Use: ${feature.properties.USECDDESC_ || "N/A"}
   Improvement Value: ${feature.properties["ImprAppr_1"] || "N/A"}
   Land Value: ${feature.properties["LandAppr_1"] || "N/A"}`,
-      imageUrl: `img/demo-real-estate-popup-${i % 5}.png`,
+      imageUrl: `img/demo-real-estate-popup-${i % 10}.png`,
     };
     const coordinates = feature.geometry.coordinates;
 
@@ -420,5 +497,26 @@ export const clearAllHighlights = (map) => {
     });
   } catch (err) {
     console.warn("Error clearing GeoJSON highlights:", err);
+  }
+};
+// Toggle the visibility of the zoning layer
+export const toggleZoningLayer = (map) => {
+  if (!map) return false;
+
+  try {
+    const visibility = map.getLayoutProperty(
+      "ga-parcels-tileset-fill-zoning",
+      "visibility"
+    );
+    const newVisibility = visibility === "visible" ? "none" : "visible";
+    map.setLayoutProperty(
+      "ga-parcels-tileset-fill-zoning",
+      "visibility",
+      newVisibility
+    );
+    return newVisibility === "visible";
+  } catch (err) {
+    console.warn("Error toggling zoning layer:", err);
+    return false;
   }
 };

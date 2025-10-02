@@ -35,11 +35,13 @@ const Map = ({ data, onLoad, onFeatureClick, onParcelClick }) => {
     const map = (mapRef.current = new mapboxgl.Map({
       style: "mapbox://styles/grafa/cmg8ib503002a01qw6rl57683",
       container: mapContainer.current,
-      center: [-84.391, 34.076],
-      bearing: 0,
-      pitch: 40,
+      center: [-84.3616, 34.0234], // Centered on Roswell, GA
+      bearing: 90,
+      pitch: 45,
       maxPitch: 60,
-      zoom: 17,
+      zoom: 14,
+      minZoom: 11,
+      maxZoom: 19,
     }));
 
     map.addControl(new mapboxgl.NavigationControl());
