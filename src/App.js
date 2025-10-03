@@ -136,7 +136,6 @@ Original author: [Chris Whong](https://www.linkedin.com/in/chris-whong-798b587/)
               <SearchBox
                 className="w-32"
                 options={{
-                  proximity: [-75.16805, 39.93298],
                   types: [
                     "postcode",
                     "place",
@@ -145,13 +144,18 @@ Original author: [Chris Whong](https://www.linkedin.com/in/chris-whong-798b587/)
                     "street",
                     "address",
                   ],
+                  country: ["US"],
+                  bbox: [
+                    -84.45672146328805, 33.92250025605736, -84.22016749135366,
+                    34.184816209795514,
+                  ],
                 }}
                 value={searchValue}
                 onChange={handleSearchChange}
                 accessToken={accessToken}
                 marker
                 mapboxgl={mapboxgl}
-                placeholder="Search for an address, city, zip, etc"
+                placeholder="Search"
                 map={mapInstanceRef.current}
                 theme={{
                   variables: {
